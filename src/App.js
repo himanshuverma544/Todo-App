@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import { useReducer } from 'react';
+import { Container } from "reactstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
+import { TodoContext } from './Context/Context';
+import { todoReducer } from './Reducer/reducer';
+
+import Todos from './Components/Todos';
+import TodoForm from "./Components/TodoForm";
+
 
 function App() {
+
+  const [todos, dispatch] = useReducer(todoReducer, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TodoContext.Provider value={{todos , dispatch}}>
+      <Container fluid>
+        <h1>Todo App</h1>
+        <Todos/>
+        <TodoForm/>
+        <ToastContainer position="bottom-center"/>
+      </Container>
+    </TodoContext.Provider>
   );
 }
 
