@@ -33,11 +33,11 @@ form {
   border-radius: 8px;
 }
 
-.completedTodo {
-  background-color: darkgray;
-  text-decoration: line-through;
+.selected-list-background-color {
+  background-color: #FFD34F;
 }
 
-.todo-completed-icon {
+.todo-icons {
   float: right;
+  cursor: pointer;
 }
