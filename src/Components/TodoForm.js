@@ -1,6 +1,6 @@
 import { Form, InputGroup, Input, Button } from "reactstrap";
 import { toast } from "react-toastify";
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useCallback, memo } from "react";
 import { TodoContext } from "../Context/Context";
 import { ADD_TODO, UPDATE_TODO } from "../Reducer/action.types";
 import { v4 as getKey } from "uuid";
@@ -9,7 +9,7 @@ import { v4 as getKey } from "uuid";
 const TodoForm = () => {
 
   const [todoString, setTodoString] = useState("");
-  const { todoToEdit, setTodoToEdit, dispatch } = useContext(TodoContext);
+  const { setPrevListToUpdate, todoToEdit, setTodoToEdit, dispatch } = useContext(TodoContext);
   const todoInputField = useRef(null);
 
   useEffect(() => {
@@ -21,10 +21,10 @@ const TodoForm = () => {
         todoInputField.current.focus();
       }
     }
-  }, [todoToEdit.status ,todoToEdit.todoString]);
+  }, [todoToEdit]);
 
 
-  function handleSubmit(event) {
+  const handleSubmit = useCallback((event) => {
 
     event.preventDefault();
 
@@ -38,12 +38,21 @@ const TodoForm = () => {
     };
 
     switch (todoToEdit.status) {
+      
       case "EDIT" :
+
         dispatch({
           type: UPDATE_TODO,
           payload: todo
         });
-        setTodoToEdit({});
+
+        setTodoToEdit(prev => ({
+          ...prev,
+           status: null
+        }));
+
+        setPrevListToUpdate(null);
+
         todoToEdit.listToUpdate.classList.remove("selected-list-background-color");
         toast("Todo Updated.", {type: "success"})
         break;
@@ -57,7 +66,7 @@ const TodoForm = () => {
     }
     
     setTodoString("");
-  }
+  }, [todoString, setPrevListToUpdate, todoToEdit, setTodoToEdit, dispatch]);
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -81,4 +90,4 @@ const TodoForm = () => {
   )
 }
 
-export default TodoForm;
+export default memo(TodoForm);

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, memo } from "react";
 import { TodoContext } from "../Context/Context";
 import { REMOVE_TODO } from "../Reducer/action.types";
 import { ListGroup, ListGroupItem } from "reactstrap";
@@ -39,4 +39,4 @@ const Todos = () => {
   );
 };
 
-export default Todos;
+export default memo(Todos);

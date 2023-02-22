@@ -1,4 +1,5 @@
-import { useState, useReducer, useEffect } from 'react';
+import { useState, useEffect, useReducer, useCallback } from 'react';
+
 import { Container } from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
@@ -17,40 +18,39 @@ const App = () => {
 
   const [todos, dispatch] = useReducer(todoReducer, []);
   const [todoToEdit, setTodoToEdit] = useState({});
-  const [previousListToUpdate, setPreviousListToUpdate] = useState();
+  const [prevListToUpdate, setPrevListToUpdate] = useState(null);
 
   useEffect(() => {
     const localTodos = localStorage.getItem("todos");
     if (localTodos) {
-      console.log("Runs 1:", localTodos);
       dispatch({
         type: LOAD_TODOS,
         payload: JSON.parse(localTodos)
       });
-    }
+    }    
   }, []);
 
   useEffect(() => {
     if (todos.length) {
       localStorage.setItem("todos", JSON.stringify(todos));
     }
-  }, [todos])
+  }, [todos]);
 
-  function handleEditTodo(event, todoId) {
+  const handleEditTodo = useCallback((event, todoId) => {
 
-    if (previousListToUpdate) {
-      previousListToUpdate.classList.remove("selected-list-background-color");
+    if (prevListToUpdate) {
+      prevListToUpdate.classList.remove("selected-list-background-color");
     }
 
     const listToUpdate = event.target.closest(".list-item");
     listToUpdate.classList.add("selected-list-background-color");
 
-    setPreviousListToUpdate(listToUpdate);
     setTodoToEdit({...todos.find(todo => (todo.id === todoId)), status: "EDIT", listToUpdate});
-  }
+    setPrevListToUpdate(listToUpdate);
+  }, [todos, prevListToUpdate]);
 
   return (
-    <TodoContext.Provider value={{todos, handleEditTodo, todoToEdit, setTodoToEdit, dispatch}}>
+    <TodoContext.Provider value={{todos, handleEditTodo, setPrevListToUpdate, todoToEdit, setTodoToEdit, dispatch}}>
       <Container fluid>
         <h1>Todo App</h1>
         <Todos/>
