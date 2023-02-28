@@ -13,6 +13,8 @@ import { LOAD_TODOS } from './Reducer/action.types';
 import Todos from './Components/Todos';
 import TodoForm from "./Components/TodoForm";
 
+import { setIsTodoLoaded, isTodosLoaded } from './functions';
+
 
 const App = () => {
 
@@ -27,11 +29,12 @@ const App = () => {
         type: LOAD_TODOS,
         payload: JSON.parse(localTodos)
       });
-    }    
+    }
+    setIsTodoLoaded(true);    
   }, []);
 
   useEffect(() => {
-    if (todos.length) {
+    if (isTodosLoaded()) {
       localStorage.setItem("todos", JSON.stringify(todos));
     }
   }, [todos]);
