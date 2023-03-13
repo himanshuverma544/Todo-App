@@ -13,8 +13,6 @@ import { LOAD_TODOS } from './Reducer/action.types';
 import Todos from './Components/Todos';
 import TodoForm from "./Components/TodoForm";
 
-import { setIsTodoLoaded, isTodosLoaded } from './functions';
-
 
 const App = () => {
 
@@ -23,18 +21,23 @@ const App = () => {
   const [prevListToUpdate, setPrevListToUpdate] = useState(null);
 
   useEffect(() => {
-    const localTodos = localStorage.getItem("todos");
-    if (localTodos) {
-      dispatch({
-        type: LOAD_TODOS,
-        payload: JSON.parse(localTodos)
-      });
+    loadLocalTodos();
+
+    function loadLocalTodos() {
+      const localTodos = localStorage.getItem("todos");
+      if (localTodos) {
+        dispatch({
+          type: LOAD_TODOS,
+          payload: JSON.parse(localTodos)
+        });
+      }
     }
-    setIsTodoLoaded(true);    
   }, []);
 
   useEffect(() => {
-    if (isTodosLoaded()) {
+    setLocalTodos();
+
+    function setLocalTodos() {
       localStorage.setItem("todos", JSON.stringify(todos));
     }
   }, [todos]);
