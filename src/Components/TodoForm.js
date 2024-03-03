@@ -1,6 +1,5 @@
 import { Form, InputGroup, Input, Button } from "reactstrap";
-import { toast } from "react-toastify";
-import { useState, useEffect, useContext, useRef, useCallback, memo } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 import { TodoContext } from "../Context/Context";
 import { ADD_TODO, UPDATE_TODO } from "../Reducer/action.types";
 import { v4 as getKey } from "uuid";
@@ -21,15 +20,14 @@ const TodoForm = () => {
         todoInputField.current.focus();
       }
     }
-  }, [todoToEdit]);
-
+  }, [todoToEdit.status, todoToEdit.todoString]);
 
   const handleSubmit = useCallback((event) => {
 
     event.preventDefault();
 
     if (!todoString) {
-      return toast("Please enter some text.", {type: "error"});
+      return;
     }
 
     const todo = {
@@ -54,7 +52,6 @@ const TodoForm = () => {
         setPrevListToUpdate(null);
 
         todoToEdit.listToUpdate.classList.remove("selected-list-background-color");
-        toast("Todo Updated.", {type: "success"})
         break;
 
       default:
@@ -62,7 +59,6 @@ const TodoForm = () => {
           type: ADD_TODO,
           payload: todo
         });
-        toast("Todo Added.", {type: "success"})
     }
     
     setTodoString("");
@@ -72,14 +68,15 @@ const TodoForm = () => {
     <Form onSubmit={handleSubmit}>
         <InputGroup>
           <Input
+            id="todo"
+            name="todo"
             type="text"
             innerRef={todoInputField}
-            name="todo"
-            id="todo"
             placeholder="Enter your Todo here"
             value={todoString}
             onChange={event => setTodoString(event.target.value)}
             autoFocus
+            autoComplete="off"
           />
           <Button
             color="warning">
@@ -90,4 +87,4 @@ const TodoForm = () => {
   )
 }
 
-export default memo(TodoForm);
+export default TodoForm;
