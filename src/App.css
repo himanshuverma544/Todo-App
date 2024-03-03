@@ -14,23 +14,27 @@ body {
 h1 {
   text-align: center;
   margin-top: 20px;
-  color: aliceblue;
+  color: #FFF;
 }
 
-form {
-  width: 50%; 
+form,
+.items {
+  max-width: 500px;
+  width: 100%; 
   margin: auto;
-  margin-bottom: 50px;
   border-radius: 8px;
-  border: 2px solid rgb(66, 66, 180);
-  color: #000;
-  box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.5);
 }
 
 .items {
-  width: 50%;
-  margin: auto;
+  overflow-wrap: break-word;
+}
+
+form {
+  margin-top: 30px;
+  border: 2px solid #4c4c4d;
   border-radius: 8px;
+  color: #000;
+  box-shadow: 0 2px 4px 4px rgba(0, 0, 0, 0.5);
 }
 
 .selected-list-background-color {
